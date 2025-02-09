@@ -3,10 +3,10 @@ const apiPath = import.meta.env.VITE_API_PATH;
 
 export const productService = {
     // 取得商品列表
-    async getProducts () {
+    async getProducts (page = 1) {
         try {
             const res = await hexAxios.get(`/api/${apiPath}/products`);
-            console.log(res);
+            if (res.data.success) return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -15,7 +15,7 @@ export const productService = {
     async getProduct (id) {
         try {
             const res = await hexAxios.get(`/api/${apiPath}/product/${id}`);
-            console.log(res);
+            if (res.data.success) return res.data.product;
         } catch (error) {
             console.log(error);
         }
