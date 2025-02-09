@@ -6,7 +6,7 @@ export const authService = {
         try {
             const res = await hexAxios.post('/admin/signin', account);
             document.cookie = `ctoken=${res.data.token}; expires=${new Date(res.data.expired)}; path=/`;
-            console.log(res);
+            return res.data;
         } catch (error) {
             console.log(error);
         }

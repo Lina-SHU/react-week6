@@ -5,7 +5,7 @@ export const productService = {
     // 取得商品列表
     async getProducts (page = 1) {
         try {
-            const res = await hexAxios.get(`/api/${apiPath}/products`);
+            const res = await hexAxios.get(`/api/${apiPath}/products?page=${page}`);
             if (res.data.success) return res.data;
         } catch (error) {
             console.log(error);
