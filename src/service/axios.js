@@ -13,7 +13,7 @@ hexAxios.interceptors.request.use(
             "$1",
         );
         if (ctoken) {
-            config.headers.Authorization = `Bearer ${ctoken}`;
+            config.headers.Authorization = ctoken;
         }
 
         return config;

@@ -3,6 +3,7 @@ import { authService } from "../service/auth.service";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
+import { useEffect } from "react";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,7 +15,23 @@ const Login = () => {
     } = useForm({
         mode: 'onTouched'
     });
-    
+
+    const checkLogin = async () => {
+        try {
+            return await authService.loginCheck();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        (async() => {
+            const res = await checkLogin();
+            if (res) {
+                navigate('/admin/products');
+            }
+        })();
+    }, []);
 
     const login = async (data) => {
         try {

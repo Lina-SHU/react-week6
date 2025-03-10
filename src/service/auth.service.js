@@ -15,7 +15,7 @@ export const authService = {
     async loginCheck () {
         try {
             const res = await hexAxios.post('/api/user/check');
-            console.log(res);
+            return res.data.success;
         } catch (error) {
             console.log(error);
         }
