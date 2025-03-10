@@ -4,16 +4,21 @@ import { NavLink } from "react-router";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    const [pagintaion, setPagintaion] = useState([]);
+    const [pagintaion, setPagintaion] = useState({});
 
-    const getProducts = async () => {
+    const getProducts = async (page = 1) => {
         try {
-            const res = await productService.getProducts();
+            const res = await productService.getProducts(page);
             setProducts(res.products);
-            setPagintaion(res.pagintaion);
+            setPagintaion(res.pagination);
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const getProductItems = (e, page) => {
+        e.preventDefault();
+        getProducts(page);
     };
 
     useEffect(() => {
@@ -40,6 +45,17 @@ const Products = () => {
                         )
                     })
                 }
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className={`page-item ${!pagintaion.has_pre && 'disabled'}`}><a className="page-link" href="#" onClick={(e) => getProductItems(e, pagintaion.current_page - 1)}>上一頁</a></li>
+                        {
+                            pagintaion.total_pages && Array.from({ length: pagintaion.total_pages }, (_, i) => i + 1).map((page) => {
+                                return (<li key={page} className={`page-item ${pagintaion.current_page && pagintaion.current_page === page && 'active'}`}><a className="page-link" href="#" onClick={(e) => getProductItems(e, page)}>{page}</a></li>)
+                            })
+                        }
+                        <li className={`page-item ${!pagintaion.has_next && 'disabled'}`}><a className="page-link" href="#" onClick={(e) => getProductItems(e, pagintaion.current_page + 1)}>下一頁</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </>)
