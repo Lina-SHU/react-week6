@@ -1,25 +1,24 @@
-import { useState } from "react";
 import Swal from "sweetalert2";
 import { authService } from "../service/auth.service";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import Input from "../components/Input";
 
 const Login = () => {
     const navigate = useNavigate();
-    const [account, setAccount] = useState({ username: '', password: '' });
 
-    const handleInput = (e) => {
-        const {name, value} = e.target;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        mode: 'onTouched'
+    });
+    
 
-        setAccount({
-            ...account,
-            [name]: value
-        });
-    };
-
-    const login = async (e) => {
-        e.preventDefault();
+    const login = async (data) => {
         try {
-            const res = await authService.login(account);
+            const res = await authService.login(data);
             if (res.success) {
                 Swal.fire({
                     position: 'center',
@@ -39,17 +38,45 @@ const Login = () => {
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-8 col-lg-6">
-                    <form>
+                    <form onSubmit={handleSubmit(login)}>
                         <h2 className="fs-3 fw-bold text-center mb-3">請先登入</h2>
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label">信箱</label>
-                            <input type="email" className="form-control" id="username" name="username" placeholder="請輸入信箱" value={account.username} onChange={handleInput} />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="password" className="form-label">密碼</label>
-                            <input type="password" className="form-control" id="password" name="password" placeholder="請輸入密碼" value={account.password} onChange={handleInput} />
-                        </div>
-                        <button type="submit" className="btn btn-primary w-100" onClick={login}>登入</button>
+                        <Input
+                            register={register}
+                            errors={errors}
+                            id="username"
+                            labelText="信箱"
+                            type="email"
+                            placeholder="請輸入信箱"
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: '信箱為必填'
+                                },
+                                pattern: {
+                                    value: /^\S+@\S+$/i,
+                                    message: '信箱格式不正確'
+                                }
+                            }}
+                        ></Input>
+                        <Input
+                            register={register}
+                            errors={errors}
+                            id="password"
+                            labelText="密碼"
+                            type="password"
+                            placeholder="請輸入密碼"
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: '密碼為必填'
+                                },
+                                minLength: {
+                                    value: 6,
+                                    message: '長度不少於 6 碼'
+                                }
+                            }}
+                        ></Input>
+                        <button type="submit" className="btn btn-primary w-100">登入</button>
                     </form>
                 </div>
             </div>
