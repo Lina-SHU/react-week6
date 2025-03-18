@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, NavLink } from "react-router";
 import { productService } from '../../service/product.service';
+import Swal from "sweetalert2";
 
 const Product = () => {
     const params = useParams();
@@ -8,12 +9,17 @@ const Product = () => {
 
     const [product, setProduct] = useState({});
     const getProduct = async (id) => {
-        try {
-            const res = await productService.getProduct(id);
-            setProduct(res);
-        } catch (error) {
-            console.log(error);
+        const res = await productService.getProduct(id);
+        if (!res.isSuccess) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: res.msg,
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
+        setProduct(res.data);
     };
     useEffect(() => {
         getProduct(params.id);

@@ -5,10 +5,23 @@ export const authService = {
     async login (account) {
         try {
             const res = await hexAxios.post('/admin/signin', account);
+            if (res.success) {
+                return {
+                    isSuccess: false,
+                    msg: res.message
+                }
+            }
             document.cookie = `ctoken=${res.data.token}; expires=${new Date(res.data.expired)}; path=/`;
-            return res.data;
+            return {
+                isSuccess: true,
+                data: res.data,
+                msg: res.message
+            };
         } catch (error) {
-            console.log(error);
+            return {
+                isSuccess: false,
+                msg: error.response.data.message
+            };
         }
     },
     // 登入驗證
@@ -17,16 +30,22 @@ export const authService = {
             const res = await hexAxios.post('/api/user/check');
             return res.data.success;
         } catch (error) {
-            console.log(error);
+            return;
         }
     },
     // 登出
     async logout () {
         try {
             const res = await hexAxios.post('/logout');
-            console.log(res);
+            return {
+                isSuccess: true,
+                data: res.data.success
+            };
         } catch (error) {
-            console.log(error);
+            return {
+                isSuccess: false,
+                msg: error.response.data.message
+            };
         }
     }
 }

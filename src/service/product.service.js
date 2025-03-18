@@ -6,18 +6,44 @@ export const productService = {
     async getProducts (page = 1) {
         try {
             const res = await hexAxios.get(`/api/${apiPath}/products?page=${page}`);
-            if (res.data.success) return res.data;
+            if (res.data.success) {
+                return {
+                    isSuccess: true,
+                    data: res.data
+                }
+            }  else {
+                return {
+                    isSuccess: false,
+                    msg: res.data
+                }
+            }
         } catch (error) {
-            console.log(error);
+            return {
+                isSuccess: false,
+                msg: error.response.data.message
+            }
         }
     },
     // 取得單一商品
     async getProduct (id) {
         try {
             const res = await hexAxios.get(`/api/${apiPath}/product/${id}`);
-            if (res.data.success) return res.data.product;
+            if (res.data.success)  {
+                return {
+                    isSuccess: true,
+                    data: res.data.product
+                }
+            }  else {
+                return {
+                    isSuccess: false,
+                    msg: res.data
+                }
+            }
         } catch (error) {
-            console.log(error);
+            return {
+                isSuccess: false,
+                msg: error.response.data.message
+            }
         }
     }
 }

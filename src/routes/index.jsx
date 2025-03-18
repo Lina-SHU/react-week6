@@ -9,6 +9,7 @@ import AdminLayout from "../components/AdminLayout";
 import AdminProducts from "../views/admin/Products";
 import AdminOrders from "../views/admin/Orders";
 import AdminCoupons from "../views/admin/Coupons";
+import NotFound from "../views/front/NotFound";
 
 const routes = [
     {
@@ -57,6 +58,10 @@ const routes = [
                 element: <AdminCoupons />
             }
         ]
+    },
+    {
+        path: '*',
+        element: <NotFound />
     }
 
 ];

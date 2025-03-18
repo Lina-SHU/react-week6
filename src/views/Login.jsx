@@ -17,11 +17,7 @@ const Login = () => {
     });
 
     const checkLogin = async () => {
-        try {
-            return await authService.loginCheck();
-        } catch (error) {
-            console.log(error);
-        }
+        return await authService.loginCheck();
     };
 
     useEffect(() => {
@@ -34,21 +30,25 @@ const Login = () => {
     }, []);
 
     const login = async (data) => {
-        try {
-            const res = await authService.login(data);
-            if (res.success) {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: res.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                navigate('/admin/products');
-            }
-        } catch (error) {
-            console.log(error);
+        const res = await authService.login(data);
+        if (!res.isSuccess) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: res.msg,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return
         }
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: res.msg,
+            showConfirmButton: false,
+            timer: 1500
+        });
+        navigate('/admin/products');
     };
     
     return (<>

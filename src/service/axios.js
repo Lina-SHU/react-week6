@@ -32,12 +32,7 @@ hexAxios.interceptors.response.use(
         if (error.response && error.response.status.toString().startsWith('5')) {
             return;
         }
-        if (error.response && error.response.status !== 200 && error.response.status !== 401) {
-            return;
-        }
-        if (error.response && error.response.status === 401) {
-            return;
-        }
+        return Promise.reject(error);
     }
 );
 

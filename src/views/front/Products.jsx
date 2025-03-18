@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
 import { productService } from '../../service/product.service';
 import { NavLink } from "react-router";
+import Swal from "sweetalert2";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
     const [pagintaion, setPagintaion] = useState({});
 
     const getProducts = async (page = 1) => {
-        try {
-            const res = await productService.getProducts(page);
-            setProducts(res.products);
-            setPagintaion(res.pagination);
-        } catch (error) {
-            console.log(error);
+        const res = await productService.getProducts(page);
+        if (!res.isSuccess) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: res.msg,
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
+        setProducts(res.data.products);
+        setPagintaion(res.data.pagination);
     };
 
     const getProductItems = (e, page) => {
