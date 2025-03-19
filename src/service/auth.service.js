@@ -5,17 +5,17 @@ export const authService = {
     async login (account) {
         try {
             const res = await hexAxios.post('/admin/signin', account);
-            if (res.success) {
+            const result = res.data;
+            if (!result.success) {
                 return {
                     isSuccess: false,
                     msg: res.message
                 }
             }
-            document.cookie = `ctoken=${res.data.token}; expires=${new Date(res.data.expired)}; path=/`;
+            document.cookie = `ctoken=${result.token}; expires=${new Date(result.expired)}; path=/`;
             return {
                 isSuccess: true,
-                data: res.data,
-                msg: res.message
+                msg: result.message
             };
         } catch (error) {
             return {
@@ -39,7 +39,7 @@ export const authService = {
             const res = await hexAxios.post('/logout');
             return {
                 isSuccess: true,
-                data: res.data.success
+                msg: res.data.message
             };
         } catch (error) {
             return {
